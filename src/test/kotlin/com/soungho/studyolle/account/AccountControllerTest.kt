@@ -35,6 +35,7 @@ internal class AccountControllerTest @Autowired constructor(
             .andExpect {
                 status { isOk() }
                 view { name("account/sign-up") }
+                model { attributeExists("signUpForm") }
             }
     }
 
