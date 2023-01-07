@@ -15,8 +15,7 @@ import javax.validation.Valid
 @Controller
 class AccountController(
     private val signupFormValidator: SignUpFormValidator,
-    private val accountRepository: AccountRepository,
-    private val mailSender: JavaMailSender
+    private val accountService: AccountService
 ) {
 
     @InitBinder("signUpForm")
@@ -41,20 +40,8 @@ class AccountController(
         if (errors.hasErrors()) {
             return "account/sign-up";
         }
-        val account = Account(
-            email = signUpForm.email,
-            nickname = signUpForm.nickname,
-            password = signUpForm.password, // todo: encoding
-            studyCreatedByWeb = true,
-            studyEnrollmentResultByWeb = true,
-            studyUpdatedByWeb = true
-        )
-        val newAccount = accountRepository.save(account)
-        val mailMessage = SimpleMailMessage()
-        mailMessage.setTo(newAccount.email)
-        mailMessage.subject = "스터디올래, 회원 가입 인증"
-        mailMessage.text = "/check-email-token?token=${newAccount.emailCheckToken}&email=${newAccount.email}"
-        mailSender.send(mailMessage)
+
+        accountService.processNewAccount(signUpForm)
         return "redirect:/"
     }
 }
