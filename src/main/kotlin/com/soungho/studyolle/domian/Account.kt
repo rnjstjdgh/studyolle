@@ -3,6 +3,7 @@ package com.soungho.studyolle.domian
 import lombok.Builder
 import lombok.EqualsAndHashCode
 import java.time.LocalDateTime
+import java.util.*
 import javax.persistence.*
 import javax.persistence.FetchType.EAGER
 
@@ -16,26 +17,30 @@ import javax.persistence.FetchType.EAGER
 @EqualsAndHashCode(of = ["id"])
 class Account(
     @Id @GeneratedValue
-    var id: Long,
+    var id: Long? = null,
     @Column(unique = true)
     var email: String,
     @Column(unique = true)
     var nickname: String,
     var password: String,
-    var emailVerified: Boolean,
-    var emailCheckToken: String,
-    var joinedAt: LocalDateTime,
-    var bio: String,
-    var url: String,
-    var occupation: String,
-    var location: String,
+    var emailVerified: Boolean = false,
+    var emailCheckToken: String = "",
+    var joinedAt: LocalDateTime = LocalDateTime.now(),
+    var bio: String = "",
+    var url: String? = null,   // fixme: 요런 요소들은 회원 객체에 없을 수도 있는 요소? <- 의미없는 디폴트값을 설정하기보단 null 을 넣어서 비즈니스로직에서 확인하도록 하는게 더 좋을까?
+    var occupation: String = "",
+    var location: String = "",
     @Lob @Basic(fetch = EAGER)
-    var profileImage: String,
-    var studyCreatedByEmail: Boolean,
-    var studyCreatedByWeb: Boolean,
-    var studyEnrollmentResultByEmail: Boolean,
-    var studyEnrollmentResultByWeb: Boolean,
-    var studyUpdatedByEmail: Boolean,
-    var studyUpdatedByWeb: Boolean,
+    var profileImage: String = "",
+    var studyCreatedByEmail: Boolean = false,
+    var studyCreatedByWeb: Boolean = false,
+    var studyEnrollmentResultByEmail: Boolean = false,
+    var studyEnrollmentResultByWeb: Boolean = false,
+    var studyUpdatedByEmail: Boolean = false,
+    var studyUpdatedByWeb: Boolean = false,
 ) {
+
+    fun generateEmailCheckToken() {
+        this.emailCheckToken = UUID.randomUUID().toString()
+    }
 }

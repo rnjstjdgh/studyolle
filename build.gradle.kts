@@ -34,6 +34,8 @@ dependencies {
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
 	implementation("javax.validation:validation-api:2.0.1.Final")
 	implementation("org.hibernate:hibernate-validator:8.0.0.Final")
+	implementation("io.github.microutils:kotlin-logging-jvm:2.0.10")
+	implementation("org.slf4j:slf4j-api:1.7.30")
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.h2database:h2")
