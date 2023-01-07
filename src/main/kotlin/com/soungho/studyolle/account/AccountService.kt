@@ -3,12 +3,14 @@ package com.soungho.studyolle.account
 import com.soungho.studyolle.domian.Account
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
-    private val mailSender: JavaMailSender
+    private val mailSender: JavaMailSender,
+    private val passwordEncoder: PasswordEncoder
 ) {
 
     fun processNewAccount(signUpForm: SignUpForm) {
@@ -17,12 +19,11 @@ class AccountService(
         sendSignUpConfirmEmail(newAccount)
     }
 
-
     private fun saveNewAccount(signUpForm: SignUpForm): Account {
         val account = Account(
             email = signUpForm.email,
             nickname = signUpForm.nickname,
-            password = signUpForm.password, // todo: encoding
+            password = passwordEncoder.encode(signUpForm.password),
             studyCreatedByWeb = true,
             studyEnrollmentResultByWeb = true,
             studyUpdatedByWeb = true
@@ -38,5 +39,4 @@ class AccountService(
         }
         mailSender.send(mailMessage)
     }
-
 }

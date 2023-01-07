@@ -1,6 +1,6 @@
 package com.soungho.studyolle.account
 
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -66,17 +66,23 @@ internal class AccountControllerTest @Autowired constructor(
     @DisplayName("회원 가입 처리 - 입력값 정상")
     @Test
     fun signUpSubmit_with_correct_input() {
+        val givenEmail = "gshgsh0831@gmail.com"
+        val givenPassword = "123456789"
+
         mockMvc.post("/sign-up") {
             param("nickname", "soungho")
-            param("email", "gshgsh0831@gmail.com")
-            param("password", "123456789")
+            param("email", givenEmail)
+            param("password", givenPassword)
             with(csrf())
         }.andExpect {
             status { is3xxRedirection() }
             view { name("redirect:/") }
         }
 
-        assertTrue(accountRepository.existsByEmail("gshgsh0831@gmail.com"))
+        val account = accountRepository.findByEmail(givenEmail)
+        assertNotNull(account)
+        assertNotEquals(account?.password, givenPassword)
+
         then(javaMailSender).should().send(any(SimpleMailMessage::class.java))
     }
 }
