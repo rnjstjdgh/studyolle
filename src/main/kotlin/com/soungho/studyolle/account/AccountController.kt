@@ -1,8 +1,5 @@
 package com.soungho.studyolle.account
 
-import com.soungho.studyolle.domian.Account
-import org.springframework.mail.SimpleMailMessage
-import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -21,7 +18,6 @@ class AccountController(
     @InitBinder("signUpForm")
     fun initBinder(webDataBinder: WebDataBinder) {
         webDataBinder.addValidators(signupFormValidator)
-
     }
 
     @GetMapping("/sign-up")
