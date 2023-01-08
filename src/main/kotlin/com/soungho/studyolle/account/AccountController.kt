@@ -57,7 +57,7 @@ class AccountController(
             return view
         }
 
-        if(account.emailCheckToken != token) {  // 이메일 인증 토큰이 다르다
+        if(!account.isValidToken(token)) {  // 이메일 인증 토큰이 다르다
             model.addAttribute("error", "wrong.token")
             return view
         }
