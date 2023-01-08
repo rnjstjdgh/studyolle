@@ -39,7 +39,8 @@ class AccountController(
             return "account/sign-up";
         }
 
-        accountService.processNewAccount(signUpForm)
+        val newAccount = accountService.processNewAccount(signUpForm)
+        accountService.login(newAccount)
         return "redirect:/"
     }
 
@@ -63,6 +64,7 @@ class AccountController(
         }
 
         account.completeSignUp()
+        accountService.login(account)
         model.addAttribute("numberOfUser", accountRepository.count())
         model.addAttribute("nickname", account.nickname)
         return view

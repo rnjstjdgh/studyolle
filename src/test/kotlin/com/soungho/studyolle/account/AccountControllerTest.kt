@@ -15,6 +15,8 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
+import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated
+import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -65,6 +67,7 @@ internal class AccountControllerTest @Autowired constructor(
         }.andExpect {
             status { isOk() }
             view { name("account/sign-up") }
+            unauthenticated()
         }
     }
 
@@ -82,6 +85,7 @@ internal class AccountControllerTest @Autowired constructor(
         }.andExpect {
             status { is3xxRedirection() }
             view { name("redirect:/") }
+            authenticated().withUsername("soungho")
         }
 
         val account = accountRepository.findByEmail(givenEmail)
@@ -102,6 +106,7 @@ internal class AccountControllerTest @Autowired constructor(
             status { isOk() }
             model { attributeExists("error") }
             view { name("account/checked-email") }
+            unauthenticated()
         }
     }
 
@@ -127,6 +132,7 @@ internal class AccountControllerTest @Autowired constructor(
                 attributeExists("numberOfUser")
             }
             view { name("account/checked-email") }
+            authenticated()
         }
     }
 }
