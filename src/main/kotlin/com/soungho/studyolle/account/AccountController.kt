@@ -62,8 +62,7 @@ class AccountController(
             return view
         }
 
-        account.emailVerified = true
-        account.joinedAt = LocalDateTime.now()
+        account.completeSignUp()
         model.addAttribute("numberOfUser", accountRepository.count())
         model.addAttribute("nickname", account.nickname)
         return view

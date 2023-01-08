@@ -43,4 +43,9 @@ class Account(
     fun generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString()
     }
+
+    fun completeSignUp() {
+        this.emailVerified = true
+        this.joinedAt = LocalDateTime.now()
+    }
 }

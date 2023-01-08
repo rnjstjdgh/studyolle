@@ -1,10 +1,13 @@
 package com.soungho.studyolle.account
 
+import com.soungho.studyolle.domian.Account
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
+import org.mockito.BDDMockito.mock
 import org.mockito.BDDMockito.then
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -18,7 +21,9 @@ import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
+import org.springframework.transaction.annotation.Transactional
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 internal class AccountControllerTest @Autowired constructor(
@@ -85,5 +90,43 @@ internal class AccountControllerTest @Autowired constructor(
         assertNotEquals(account?.password, givenPassword)
 
         then(javaMailSender).should().send(any(SimpleMailMessage::class.java))
+    }
+
+    @DisplayName("인증 메일 확인 - 입력값 오류")
+    @Test
+    fun checkEmailToken_with_wrong_input() {
+        mockMvc.get("/check-email-token") {
+            param("token", "fdsjfldsj")
+            param("email", "email.email.con")
+        }.andExpect {
+            status { isOk() }
+            model { attributeExists("error") }
+            view { name("account/checked-email") }
+        }
+    }
+
+    @DisplayName("인증 메일 확인 - 입력값 정상")
+    @Test
+    fun checkEmailToken() {
+        val account = Account(
+            email = "test@email.com",
+            password = "1234566",
+            nickname = "soungho"
+        )
+        val newAccount = accountRepository.save(account)
+        newAccount.generateEmailCheckToken()
+
+        mockMvc.get("/check-email-token") {
+            param("token", newAccount.emailCheckToken)
+            param("email", newAccount.email)
+        }.andExpect {
+            status { isOk() }
+            model {
+                attributeDoesNotExist("error")
+                attributeExists("nickname")
+                attributeExists("numberOfUser")
+            }
+            view { name("account/checked-email") }
+        }
     }
 }
