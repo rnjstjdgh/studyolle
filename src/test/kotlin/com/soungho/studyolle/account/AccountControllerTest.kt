@@ -81,6 +81,7 @@ internal class AccountControllerTest @Autowired constructor(
 
         val account = accountRepository.findByEmail(givenEmail)
         assertNotNull(account)
+        assertNotNull(account?.emailCheckToken)
         assertNotEquals(account?.password, givenPassword)
 
         then(javaMailSender).should().send(any(SimpleMailMessage::class.java))

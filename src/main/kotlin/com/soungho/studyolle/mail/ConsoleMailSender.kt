@@ -1,4 +1,4 @@
-package com.soungho.studyolle
+package com.soungho.studyolle.mail
 
 import mu.KotlinLogging
 import org.springframework.context.annotation.Profile

@@ -25,7 +25,7 @@ class Account(
     var password: String,
     var emailVerified: Boolean = false,
     var emailCheckToken: String = "",
-    var joinedAt: LocalDateTime = LocalDateTime.now(),
+    var joinedAt: LocalDateTime? = null,
     var bio: String = "",
     var url: String? = null,   // fixme: 요런 요소들은 회원 객체에 없을 수도 있는 요소? <- 의미없는 디폴트값을 설정하기보단 null 을 넣어서 비즈니스로직에서 확인하도록 하는게 더 좋을까?
     var occupation: String = "",

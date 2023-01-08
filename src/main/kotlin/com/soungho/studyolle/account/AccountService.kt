@@ -5,6 +5,7 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AccountService(
@@ -13,6 +14,7 @@ class AccountService(
     private val passwordEncoder: PasswordEncoder
 ) {
 
+    @Transactional
     fun processNewAccount(signUpForm: SignUpForm) {
         val newAccount = saveNewAccount(signUpForm)
         newAccount.generateEmailCheckToken()
