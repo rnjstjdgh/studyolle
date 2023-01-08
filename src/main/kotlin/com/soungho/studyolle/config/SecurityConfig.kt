@@ -22,6 +22,7 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
 
     override fun configure(web: WebSecurity) {
         web.ignoring()
+            .mvcMatchers("/node_modules/**")
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
     }
 }
