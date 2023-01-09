@@ -48,7 +48,7 @@ class AccountService(
 
     fun login(account: Account) {
         val token = UsernamePasswordAuthenticationToken(
-            account.nickname,
+            UserAccount(account),
             account.password,
             arrayListOf(SimpleGrantedAuthority("ROLE_USER"))
         )
