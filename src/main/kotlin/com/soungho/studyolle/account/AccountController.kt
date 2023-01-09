@@ -1,5 +1,6 @@
 package com.soungho.studyolle.account
 
+import com.soungho.studyolle.domian.Account
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
@@ -68,5 +69,29 @@ class AccountController(
         model.addAttribute("numberOfUser", accountRepository.count())
         model.addAttribute("nickname", account.nickname)
         return view
+    }
+
+    @GetMapping("/check-email")
+    fun checkEmail(
+        @CurrentUser account: Account,
+        model: Model
+    ): String {
+        model.addAttribute("email", account.email)
+        return "account/check-email"
+    }
+
+    @GetMapping("resend-confirm-email")
+    fun resendConfirmEmail(
+        @CurrentUser account: Account,
+        model: Model
+    ): String {
+        if(!account?.canSendConfirmEmail()!!) {
+            model.addAttribute("error", "인증 이메일은 1시간에 한번만 전송할 수 있습니다.")
+            model.addAttribute("email", account.email)
+            return "account/check-email"
+        }
+
+        accountService.sendSignUpConfirmEmail(account)
+        return "redirect:/"
     }
 }

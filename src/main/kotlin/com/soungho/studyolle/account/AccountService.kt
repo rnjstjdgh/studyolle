@@ -37,7 +37,7 @@ class AccountService(
         return accountRepository.save(account)
     }
 
-    private fun sendSignUpConfirmEmail(newAccount: Account) {
+    fun sendSignUpConfirmEmail(newAccount: Account) {
         val mailMessage = SimpleMailMessage().apply {
             setTo(newAccount.email)
             subject = "스터디올래, 회원 가입 인증"
