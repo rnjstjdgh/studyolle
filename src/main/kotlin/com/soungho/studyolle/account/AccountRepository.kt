@@ -10,4 +10,5 @@ interface AccountRepository: JpaRepository<Account, Long> {
 
     fun findByEmail(email: String): Account?
 
+    fun findByNickname(nickname: String): Account?
 }

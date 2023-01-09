@@ -20,4 +20,9 @@ class MainController {
 
         return "index"
     }
+
+    @GetMapping("/login")
+    fun login(): String {
+        return "login"
+    }
 }
