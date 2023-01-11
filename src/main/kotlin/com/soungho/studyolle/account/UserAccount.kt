@@ -10,5 +10,4 @@ class UserAccount(
     account.nickname,
     account.password,
     arrayListOf(SimpleGrantedAuthority("ROLE_USER"))
-) {
-}
+)
