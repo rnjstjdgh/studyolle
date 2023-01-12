@@ -7,7 +7,9 @@ import org.springframework.validation.Errors
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.InitBinder
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import java.lang.IllegalArgumentException
 import java.time.LocalDateTime
 import javax.validation.Valid
 
@@ -93,5 +95,21 @@ class AccountController(
 
         accountService.sendSignUpConfirmEmail(account)
         return "redirect:/"
+    }
+
+    @GetMapping("/profile/{nickname}")
+    fun viewProfile(
+        @PathVariable nickname: String,
+        model: Model,
+        @CurrentUser account: Account
+    ): String {
+        val byNickname = accountRepository.findByNickname(nickname)
+            ?: throw IllegalArgumentException("$nickname 에 해당하는 사용자가 없습니다")
+
+        model.apply {
+            addAttribute(byNickname)
+            addAttribute("isOwner", byNickname == account)
+        }
+        return "account/profile"
     }
 }
