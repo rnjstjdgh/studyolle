@@ -66,8 +66,7 @@ class AccountController(
             return view
         }
 
-        account.completeSignUp()
-        accountService.login(account)
+        accountService.completeSignUp(account)
         model.addAttribute("numberOfUser", accountRepository.count())
         model.addAttribute("nickname", account.nickname)
         return view

@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class AccountService(
     private val accountRepository: AccountRepository,
     private val mailSender: JavaMailSender,
     private val passwordEncoder: PasswordEncoder
 ): UserDetailsService {
 
-    @Transactional
     fun processNewAccount(signUpForm: SignUpForm): Account {
         val newAccount = saveNewAccount(signUpForm)
         newAccount.generateEmailCheckToken()
@@ -58,11 +58,17 @@ class AccountService(
         SecurityContextHolder.getContext().authentication = token
     }
 
+    @Transactional(readOnly = true)
     override fun loadUserByUsername(emailOrNickname: String): UserDetails {
         val account = accountRepository.findByEmail(emailOrNickname)
             ?: accountRepository.findByNickname(emailOrNickname)
             ?: throw UsernameNotFoundException(emailOrNickname)
 
         return UserAccount(account)
+    }
+
+    fun completeSignUp(account: Account) {
+        account.completeSignUp()
+        login(account)
     }
 }
