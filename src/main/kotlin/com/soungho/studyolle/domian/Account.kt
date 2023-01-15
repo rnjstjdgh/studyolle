@@ -13,11 +13,9 @@ import javax.persistence.FetchType.EAGER
  * 부가 코드를 넣어서 세터를 닫는게 좋을지 아니면, 세터를 그냥 열어두고 사용하는쪽에서 조심하는게 좋을지 논의해보면 좋을것 같음
  */
 @Entity
-@Builder
-@EqualsAndHashCode(of = ["id"])
 class Account(
     @Id @GeneratedValue
-    var id: Long? = null,
+    var id: Long = 0,
     @Column(unique = true)
     var email: String,
     @Column(unique = true)
@@ -40,6 +38,26 @@ class Account(
     var studyUpdatedByEmail: Boolean = false,
     var studyUpdatedByWeb: Boolean = false,
 ) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Account
+
+        if (id == 0L && id != other.id) return false
+
+        return true
+    }
+
+    /***
+     * id 를 null 허용 안하도록, 0이면 아직 저장 전인것으로 처리함
+     * 따라서, 저장 전에 0, 저장 후 임의의 숫자로 변할 수 있기 때문에, hashCode 가 id 를 반환하면 jpa 는 저장 전후 다른 대상으로 인식
+     * 따라서, hashCode 를 언제나 같은 숫자를 리턴하게 해서 jpa 가 항상 equals 로 서로 같은지 확인하도록 함
+     */
+    override fun hashCode(): Int {
+        return 13
+    }
 
     fun generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString()
