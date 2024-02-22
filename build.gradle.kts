@@ -38,6 +38,8 @@ dependencies {
 	implementation("io.github.microutils:kotlin-logging-jvm:2.0.10")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE")
 	implementation("org.slf4j:slf4j-api:1.7.30")
+	implementation("org.seleniumhq.selenium:selenium-java:4.7.0")
+
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.h2database:h2")
